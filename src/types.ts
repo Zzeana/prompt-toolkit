@@ -1,80 +1,72 @@
-export type AITool =
-  | 'chatgpt'
-  | 'midjourney'
-  | 'dalle'
-  | 'figma_ai'
-  | 'stable_diffusion';
+export type WorkflowStageId = 'research' | 'synthesis' | 'ideation' | 'prototyping' | 'testing';
 
-export interface PromptComponents {
-  task: string;
-  context: string;
-  constraints: string;
-  style: string;
-}
+export type PricingTier = 'free' | 'freemium' | 'paid' | 'enterprise';
+export type EffortLevel = 'Low' | 'Medium' | 'High';
+export type LearningCurve = 'Beginner' | 'Intermediate' | 'Advanced';
 
-export interface QualityScore {
-  overall: number;
-  clarity: number;
-  specificity: number;
-  structure: number;
-  feedback: string;
-}
-
-export interface MissingElement {
-  type: string;
+export interface AITool {
+  id: string;
+  name: string;
   description: string;
-  suggestion: string;
+  workflowStages: WorkflowStageId[];
+  subCategories: string[];
+  strengths: [string, string, string];
+  weaknesses: string[];
+  useCases: string[];
+  antiUseCases: string[];
+  pricing: string;
+  pricingTier: PricingTier;
+  url: string;
+  lastVerified: string;
+  learningCurve: LearningCurve;
+  effort: EffortLevel;
+  logoColor: string;
+  logoLetter: string;
 }
 
-export interface PromptAnalysis {
-  structured_prompt: string;
-  components: PromptComponents;
-  quality_score: QualityScore;
-  missing_elements: MissingElement[];
+export interface WorkflowStage {
+  id: WorkflowStageId;
+  name: string;
+  description: string;
+  icon: string;
+  accentColor: string;
+  bgColor: string;
+  borderColor: string;
+  textColor: string;
+  subCategories: string[];
 }
 
-export interface ToolAdaptation {
-  adapted_prompt: string;
-  changes: string[];
+export interface WorkflowStep {
+  stepNumber: number;
+  title: string;
+  description: string;
+  toolId: string;
+  handoff?: string;
 }
 
-export interface GenerateRequest {
-  intent: string;
+export interface WorkflowTemplate {
+  id: string;
+  name: string;
+  description: string;
+  stages: WorkflowStageId[];
+  steps: WorkflowStep[];
+  totalTime: string;
+  difficulty: LearningCurve;
 }
 
-export interface AdaptRequest {
-  prompt: string;
-  tool: AITool;
+export interface RecommendationResult {
+  toolId: string;
+  rank: number;
+  matchScore: number;
+  matchExplanation: string;
+  effort: EffortLevel;
+  isBestForMostPeople: boolean;
 }
 
-export interface ScoreRequest {
-  prompt: string;
-}
-
-export const AI_TOOLS: Record<AITool, { label: string; color: string; description: string }> = {
-  chatgpt: {
-    label: 'ChatGPT',
-    color: '#10a37f',
-    description: 'Conversational, clear instructions',
-  },
-  midjourney: {
-    label: 'Midjourney',
-    color: '#4C7AF1',
-    description: 'Parameter-based image generation',
-  },
-  dalle: {
-    label: 'DALL-E',
-    color: '#FF6B35',
-    description: 'Descriptive image prompts',
-  },
-  figma_ai: {
-    label: 'Figma AI',
-    color: '#9747FF',
-    description: 'UI/UX design generation',
-  },
-  stable_diffusion: {
-    label: 'Stable Diffusion',
-    color: '#E05252',
-    description: 'Weighted, technical prompts',
-  },
-};
+export type ViewState =
+  | { type: 'home' }
+  | { type: 'stage'; stageId: WorkflowStageId; subCategory?: string }
+  | { type: 'recommendations'; query: string; results: RecommendationResult[] }
+  | { type: 'comparison'; toolIds: string[] }
+  | { type: 'tool'; toolId: string }
+  | { type: 'workflows' };

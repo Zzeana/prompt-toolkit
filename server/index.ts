@@ -3,7 +3,7 @@ import express from 'express';
 import cors from 'cors';
 import path from 'path';
 import { fileURLToPath } from 'url';
-import promptRouter from './routes/prompt.js';
+import recommendRouter from './routes/recommend.js';
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const app = express();
@@ -13,7 +13,7 @@ app.use(cors({ origin: 'http://localhost:5173' }));
 app.use(express.json());
 
 // API routes
-app.use('/api/prompt', promptRouter);
+app.use('/api/recommend', recommendRouter);
 
 // Serve static frontend in production
 if (process.env.NODE_ENV === 'production') {
@@ -25,7 +25,7 @@ if (process.env.NODE_ENV === 'production') {
 }
 
 app.listen(PORT, () => {
-  console.log(`PromptFlow server running on http://localhost:${PORT}`);
+  console.log(`FlowSelect server running on http://localhost:${PORT}`);
   if (!process.env.ANTHROPIC_API_KEY) {
     console.warn('Warning: ANTHROPIC_API_KEY is not set');
   }
